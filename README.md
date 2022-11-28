@@ -4,7 +4,12 @@
  - main is in dataClassifier.py
 
 ## Tocheck:
+### (missing in Project 5):
  - There is no minicontest in Project 5. But there is in Classification. How do we make that?
+ - There is no runMinicontest.py in Project 5. Check on how to make that
+
+### (extra in Project 5):
+ - ToDo
  
 
 ## Issues in files:

@@ -61,7 +61,64 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
 
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    bestAccuracyCount = -1 # best accuracy so far on validation set
+
+        # Common training - get all counts from training data
+        # We only do it once - save computation in tuning smoothing parameter
+    commonPrior = util.Counter() # probability over labels
+    commonConditionalProb = util.Counter() # Conditional probability of feature feat being 1
+                                      # indexed by (feat, label)
+    commonCounts = util.Counter() # how many time I have seen feature feat with label y
+                                    # whatever inactive or active
+
+    for i in range(len(trainingData)):
+        datum = trainingData[i]
+        label = trainingLabels[i]
+        commonPrior[label] += 1
+        for feat, value in datum.items():
+            commonCounts[(feat,label)] += 1
+            if value > 0: # assume binary value
+                commonConditionalProb[(feat, label)] += 1
+
+    for k in kgrid: # Smoothing parameter tuning loop!
+        prior = util.Counter()
+        conditionalProb = util.Counter()
+        counts = util.Counter()
+
+        # get counts from common training step
+        for key, val in commonPrior.items():
+            prior[key] += val
+        for key, val in commonCounts.items():
+            counts[key] += val
+        for key, val in commonConditionalProb.items():
+            conditionalProb[key] += val
+
+        # smoothing:
+        for label in self.legalLabels:
+            for feat in self.features:
+                conditionalProb[ (feat, label)] +=  k
+                counts[(feat, label)] +=  2*k # 2 because both value 0 and 1 are smoothed
+
+        # normalizing:
+        prior.normalize()
+        for x, count in conditionalProb.items():
+            conditionalProb[x] = count * 1.0 / counts[x]
+
+        self.prior = prior
+        self.conditionalProb = conditionalProb
+
+        # evaluating performance on validation set
+        predictions = self.classify(validationData)
+        accuracyCount =  [predictions[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
+
+        print ("Performance on validation set for k=%f: (%.1f%%)" % (k, 100.0*accuracyCount/len(validationLabels)))
+        if accuracyCount > bestAccuracyCount:
+            bestParams = (prior, conditionalProb, k)
+            bestAccuracyCount = accuracyCount
+        # end of automatic tuning loop
+    self.prior, self.conditionalProb, self.k = bestParams
+
+    #util.raiseNotDefined()
         
   def classify(self, testData):
     """
@@ -89,7 +146,16 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     logJoint = util.Counter()
     
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+    for label in self.legalLabels:
+        logJoint[label] = math.log(self.prior[label])
+        for feat, value in datum.items():
+            if value > 0:
+                logJoint[label] += math.log(self.conditionalProb[feat,label])
+            else:
+                logJoint[label] += math.log(1-self.conditionalProb[feat,label])
+
+          
     
     return logJoint
   
@@ -103,7 +169,13 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     featuresOdds = []
        
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    #util.raiseNotDefined()
+
+    for feat in self.features:
+        featuresOdds.append((self.conditionalProb[feat, label1]/self.conditionalProb[feat, label2], feat))
+    featuresOdds.sort()
+    featuresOdds = [feat for val, feat in featuresOdds[-100:]]
 
     return featuresOdds
     

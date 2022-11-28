@@ -12,3 +12,10 @@
 ### dataClassifier.py
  - Line of code : samples.loadDataFile("facedata/facedatatrain", numTraining,FACE_DATUM_WIDTH,FACE_DATUM_HEIGHT)
  - Issue : There is no such folder. We need to check how to load data.
+
+### mira.py
+ - No findHighOddsFeatures function in Project 5 but there is in Classification. So how do we create that
+
+
+## Functions to complete:
+ - findHighOddsFeatures in mira.py

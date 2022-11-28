@@ -61,7 +61,7 @@ class MiraClassifier:
         
     for c in Cgrid:
         for iteration in range(self.max_iterations):
-            print "Starting iteration ", iteration, "..."
+            print ("Starting iteration ", iteration, "...")
             for i in range(len(trainingData)):
                 maxY = self.classify([trainingData[i]])[0]
                 if maxY != trainingLabels[i]:

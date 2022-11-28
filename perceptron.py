@@ -46,10 +46,15 @@ class PerceptronClassifier:
     # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
     
     for iteration in range(self.max_iterations):
-      print "Starting iteration ", iteration, "..."
+      print ("Starting iteration ", iteration, "...")
       for i in range(len(trainingData)):
           "*** YOUR CODE HERE ***"
-          util.raiseNotDefined()
+          maxY = self.classify([trainingData[i]])[0]
+          if maxY != trainingLabels[i]:
+              self.weights[maxY] -= trainingData[i]
+              self.weights[trainingLabels[i]] += trainingData[i]
+
+          #util.raiseNotDefined()
     
   def classify(self, data ):
     """
@@ -74,7 +79,13 @@ class PerceptronClassifier:
     featuresWeights = []
 
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+
+    weights = self.weights[label]
+    for i in range(100):
+        maxWeight = weights.argMax()
+        featuresWeights.append(maxWeight)
+        weights.pop(maxWeight)
 
     return featuresWeights
 

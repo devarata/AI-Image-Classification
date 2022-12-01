@@ -1,5 +1,10 @@
 # AI-Image-Classification
 
+## Links:
+ - https://github.com/devarata/AI-Image-Classification.git
+
+ - https://github.com/Hungs20/Project-5-Classification.git
+
 ## Note:
  - main is in dataClassifier.py
 
